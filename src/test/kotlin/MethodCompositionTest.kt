@@ -3,7 +3,7 @@ import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
 
-class ArrowTest {
+class FunctionCompositionTest {
 
     val firstNamedExecutionPath: (ApiInput) -> Result<DomainObject, Exception> =
         ::validate
@@ -20,7 +20,6 @@ class ArrowTest {
     @Test
     fun defaultExecution() {
         val value = ApiInput("1")
-
         firstNamedExecutionPath(value).get() shouldBe DomainObject(2)
     }
 
@@ -30,8 +29,6 @@ class ArrowTest {
         val result = suspendedNamedExecutionPath(value).get()
         result shouldBe DomainObject(4)
     }
-
-
 }
 
 fun validate(x: ApiInput): Result<ApiInput, Exception> {
