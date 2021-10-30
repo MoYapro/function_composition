@@ -17,6 +17,10 @@ class FunctionCompositionTest {
             .then(::convertToDomain)
             .then(::doubleTheValue)
 
+    val namedExecutionPathWithCatchedStart: (DomainObject) -> Result<DomainObject, Exception> =
+       startCatched(::actionWithException) { ex -> Exception("This is the mapped exception. Original message was: ${ex.message}") }
+           .then(::doubleTheValue)
+
     val suspendedNamedExecutionPath: suspend (ApiInput) -> Result<DomainObject, Exception> =
         ::validate
             .then(::convertToDomain)
@@ -40,6 +44,15 @@ class FunctionCompositionTest {
     fun defaultExecutionWithStart() {
         val value = ApiInput("1")
         namedExecutionPathWithStart(value).get() shouldBe DomainObject(2)
+    }
+
+    @Test
+    fun defaultExecutionWithCatchedStart() {
+        val value = DomainObject(1)
+        val result = namedExecutionPathWithCatchedStart(value)
+        result.isFailure() shouldBe true
+        (result as Result.Failure).error.message shouldContain "mapped exception"
+        result.error.message shouldContain "original"
     }
 
     @Test
