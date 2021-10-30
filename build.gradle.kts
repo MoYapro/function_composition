@@ -2,19 +2,24 @@ plugins {
     kotlin("jvm") version "1.5.31"
 }
 
-group = "org.example"
+group = "de.moyapro"
 version = "1.0-SNAPSHOT"
 
 repositories {
     mavenCentral()
 }
 
-val kotestVersion = "4.6.1"
+val kotest = "4.6.3"
+val junit = "5.8.1"
+val result = "5.2.0"
+val kotlin = "1.5.31"
+val coroutines = "1.5.2"
 
 dependencies {
-    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.1")
-    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.1")
-    implementation(kotlin("stdlib"))
-    implementation("com.github.kittinunf.result:result-jvm:5.2.0")
-    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotestVersion")
+    implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin")
+    implementation("com.github.kittinunf.result:result-jvm:$result")
+    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines")
+    testImplementation("io.kotest:kotest-assertions-core-jvm:$kotest")
+    testImplementation("org.junit.jupiter:junit-jupiter-api:$junit")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit")
 }
