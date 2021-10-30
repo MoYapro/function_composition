@@ -1,6 +1,4 @@
 import com.github.kittinunf.result.Result
-import com.github.kittinunf.result.Result.Failure
-import com.github.kittinunf.result.Result.Success
 import io.kotest.matchers.shouldBe
 import kotlinx.coroutines.runBlocking
 import org.junit.jupiter.api.Test
@@ -34,37 +32,10 @@ class ArrowTest {
     }
 
 
-    private fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<T, EXCEPTION>).andThen(function: (T) -> Result<TRANSFORMED, EXCEPTION>): (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> {
-        return { i: ORIGIN ->
-            when (val r1 = this.invoke(i)) {
-                is Success -> function(r1.get())
-                is Failure -> r1
-            }
-        }
-    }
-
-    private fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception>  (suspend (ORIGIN) -> Result<T, EXCEPTION>).andThen(function: (T) -> Result<TRANSFORMED, EXCEPTION>): suspend (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> {
-        return { i: ORIGIN ->
-            when (val r1 = this.invoke(i)) {
-                is Success -> function(r1.get())
-                is Failure -> r1
-            }
-        }
-    }
-
-    private fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<T, EXCEPTION>).andThenSuspended(function: suspend (T) -> Result<TRANSFORMED, EXCEPTION>): suspend (ORIGIN) ->  Result<TRANSFORMED, EXCEPTION> {
-        return { i: ORIGIN ->
-            when (val r1 = this.invoke(i)) {
-                is Success -> function(r1.get())
-                is Failure -> r1
-            }
-        }
-    }
-
 }
 
 fun validate(x: ApiInput): Result<ApiInput, Exception> {
-    Result.of<Int,Exception> { x.value.toInt() }
+    Result.of<Int, Exception> { x.value.toInt() }
     return Result.success(x)
 }
 
@@ -76,6 +47,7 @@ fun doDomainLogic(data: DomainObject): Result<DomainObject, Exception> {
     return Result.success(data.double())
 }
 
+@Suppress("RedundantSuspendModifier") // just to test it
 suspend fun doSuspendedDomainLogic(data: DomainObject): Result<DomainObject, Exception> {
     return Result.success(data.double())
 }
