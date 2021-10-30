@@ -1,7 +1,8 @@
 import com.github.kittinunf.result.Result
 
 
-fun <T, TRANSFORMED, EXCEPTION: Exception> start(function: (T) -> Result<TRANSFORMED, EXCEPTION>): (T) -> Result<TRANSFORMED, EXCEPTION> = function
+fun <T, TRANSFORMED, EXCEPTION : Exception> start(function: (T) -> Result<TRANSFORMED, EXCEPTION>): (T) -> Result<TRANSFORMED, EXCEPTION> =
+    function
 
 
 fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<T, EXCEPTION>).then(function: (T) -> Result<TRANSFORMED, EXCEPTION>): (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> {
@@ -13,8 +14,11 @@ fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<T, EXCEP
     }
 }
 
-fun <T, TRANSFORMED, EXCEPTION: Exception> startCatched(function: (T) -> Result<TRANSFORMED, EXCEPTION>, exception: (Exception) -> EXCEPTION): (T) -> Result<TRANSFORMED, EXCEPTION> =
-    {originalInput ->
+fun <T, TRANSFORMED, EXCEPTION : Exception> startCatched(
+    function: (T) -> Result<TRANSFORMED, EXCEPTION>,
+    exception: (Exception) -> EXCEPTION,
+): (T) -> Result<TRANSFORMED, EXCEPTION> =
+    { originalInput ->
         try {
             function(originalInput)
         } catch (ex: Exception) {
@@ -22,7 +26,10 @@ fun <T, TRANSFORMED, EXCEPTION: Exception> startCatched(function: (T) -> Result<
         }
     }
 
-fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<T, EXCEPTION>).thenCatched(function: (T) -> Result<TRANSFORMED, EXCEPTION>, exception: (Exception) -> EXCEPTION): (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> {
+fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<T, EXCEPTION>).thenCatched(
+    function: (T) -> Result<TRANSFORMED, EXCEPTION>,
+    exception: (Exception) -> EXCEPTION,
+): (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> {
     return { originalInput: ORIGIN ->
         try {
             when (val intermediateResult = this.invoke(originalInput)) {
