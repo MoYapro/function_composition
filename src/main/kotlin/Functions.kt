@@ -53,6 +53,11 @@ fun <ORIGIN, OUTPUT, TRANSFORMED, EXCEPTION : Exception> (suspend (ORIGIN) -> Re
     }
 }
 
+fun <ORIGIN, TRANSFORMED, EXCEPTION : Exception> startSuspended(
+    function: suspend (ORIGIN) -> Result<TRANSFORMED, EXCEPTION>,
+): suspend (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> = function
+
+
 fun <ORIGIN, OUTPUT, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<OUTPUT, EXCEPTION>).thenSuspended(
     function: suspend (OUTPUT) -> Result<TRANSFORMED, EXCEPTION>,
 ): suspend (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> {

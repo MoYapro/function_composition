@@ -27,6 +27,10 @@ class FunctionCompositionTest {
             .thenSuspended(::doubleTheValueSuspended)
             .then(::doubleTheValue)
 
+    val suspendedNamedExecutionPathWithSuspendedStart: suspend (DomainObject) -> Result<DomainObject, Exception> =
+        startSuspended(::doubleTheValueSuspended)
+            .then(::doubleTheValue)
+
     val catchingNamedExecutionPath: (ApiInput) -> Result<DomainObject, Exception> =
         ::validate
             .then(::convertToDomain)
@@ -68,6 +72,13 @@ class FunctionCompositionTest {
     fun suspendingExecution() = runBlocking {
         val value = ApiInput("1")
         val result = suspendedNamedExecutionPath(value).get()
+        result shouldBe DomainObject(4)
+    }
+
+    @Test
+    fun suspendingStart() = runBlocking {
+        val value = DomainObject(1)
+        val result = suspendedNamedExecutionPathWithSuspendedStart(value).get()
         result shouldBe DomainObject(4)
     }
 }
