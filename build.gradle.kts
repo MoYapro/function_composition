@@ -18,7 +18,7 @@ val coroutines = "1.5.2"
 dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib:$kotlin")
     implementation("com.github.kittinunf.result:result-jvm:$result")
-    testImplementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines")
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:$coroutines")
     testImplementation("io.kotest:kotest-assertions-core-jvm:$kotest")
     testImplementation("org.junit.jupiter:junit-jupiter-api:$junit")
     testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:$junit")

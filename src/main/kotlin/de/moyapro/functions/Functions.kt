@@ -1,4 +1,5 @@
 import com.github.kittinunf.result.Result
+import kotlinx.coroutines.runBlocking
 
 
 fun <T, TRANSFORMED, EXCEPTION : Exception> start(function: (T) -> Result<TRANSFORMED, EXCEPTION>): (T) -> Result<TRANSFORMED, EXCEPTION> =
@@ -51,6 +52,12 @@ fun <ORIGIN, OUTPUT, TRANSFORMED, EXCEPTION : Exception> (suspend (ORIGIN) -> Re
             is Result.Failure -> intermediateResult
         }
     }
+}
+
+fun <ORIGIN, OUTPUT, EXCEPTION : Exception> (suspend (ORIGIN) -> Result<OUTPUT, EXCEPTION>).block()
+        : (ORIGIN) -> Result<OUTPUT, EXCEPTION> {
+    val that = this
+    return { i: ORIGIN -> runBlocking { that(i) } }
 }
 
 fun <ORIGIN, TRANSFORMED, EXCEPTION : Exception> startSuspended(

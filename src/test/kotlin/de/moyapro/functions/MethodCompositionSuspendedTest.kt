@@ -2,6 +2,7 @@ package de.moyapro.functions
 
 import ApiInput
 import DomainObject
+import block
 import com.github.kittinunf.result.Result
 import convertToDomain
 import doubleTheValue
@@ -38,6 +39,16 @@ class FunctionCompositionSuspendedTest {
         val value = DomainObject(1)
         val result = suspendedNamedExecutionPathWithSuspendedStart(value).get()
         result shouldBe DomainObject(4)
+    }
+
+    @Test
+    fun blockSuspended() {
+        val suspendedStartWithBlock: (DomainObject) -> Result<DomainObject, Exception> =
+            startSuspended(::doubleTheValueSuspended)
+                .block()
+
+        val result = suspendedStartWithBlock(DomainObject(21)).get()
+        result shouldBe DomainObject(42)
     }
 }
 
