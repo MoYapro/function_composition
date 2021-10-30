@@ -7,11 +7,15 @@ import org.junit.jupiter.api.Test
 
 class FunctionCompositionTest {
 
-    val firstNamedExecutionPath: (ApiInput) -> Result<DomainObject, Exception> =
+    val namedExecutionPath: (ApiInput) -> Result<DomainObject, Exception> =
         ::validate
             .then(::convertToDomain)
             .then(::doubleTheValue)
 
+    val namedExecutionPathWithStart: (ApiInput) -> Result<DomainObject, Exception> =
+        start(::validate)
+            .then(::convertToDomain)
+            .then(::doubleTheValue)
 
     val suspendedNamedExecutionPath: suspend (ApiInput) -> Result<DomainObject, Exception> =
         ::validate
@@ -27,6 +31,18 @@ class FunctionCompositionTest {
 
 
     @Test
+    fun defaultExecution() {
+        val value = ApiInput("1")
+        namedExecutionPath(value).get() shouldBe DomainObject(2)
+    }
+
+    @Test
+    fun defaultExecutionWithStart() {
+        val value = ApiInput("1")
+        namedExecutionPathWithStart(value).get() shouldBe DomainObject(2)
+    }
+
+    @Test
     fun executionWithCatchedException() {
         val result = catchingNamedExecutionPath(ApiInput("2"))
         result.isFailure() shouldBe true
@@ -34,11 +50,6 @@ class FunctionCompositionTest {
         result.error.message shouldContain "original"
     }
 
-    @Test
-    fun defaultExecution() {
-        val value = ApiInput("1")
-        firstNamedExecutionPath(value).get() shouldBe DomainObject(2)
-    }
 
     @Test
     fun suspendingExecution() = runBlocking {

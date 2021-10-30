@@ -1,5 +1,8 @@
 import com.github.kittinunf.result.Result
 
+
+fun <T, TRANSFORMED, EXCEPTION: Exception> start(function: (T) -> Result<TRANSFORMED, EXCEPTION>): (T) -> Result<TRANSFORMED, EXCEPTION> = function
+
 fun <ORIGIN, T, TRANSFORMED, EXCEPTION : Exception> ((ORIGIN) -> Result<T, EXCEPTION>).then(function: (T) -> Result<TRANSFORMED, EXCEPTION>): (ORIGIN) -> Result<TRANSFORMED, EXCEPTION> {
     return { i: ORIGIN ->
         when (val intermediateResult = this.invoke(i)) {
